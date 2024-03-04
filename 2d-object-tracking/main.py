@@ -19,12 +19,11 @@ while ret:
         results = model.track(frame, persist=True)
 
         # plot results
-        # cv2.rectangle
-        # cv2.putText
         frame_ = results[0].plot()
 
         # visualize
         cv2.imshow('frame', frame_)
+
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
 
