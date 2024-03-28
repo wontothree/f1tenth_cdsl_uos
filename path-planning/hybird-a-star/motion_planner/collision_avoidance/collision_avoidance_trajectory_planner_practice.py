@@ -46,7 +46,8 @@ class CollisionAvoidanceTrajectoryPlanner:
         self.ego_current_lane = self.find_current_lane(self.ego_vehicle)
 
     def _update_current_front_vehicle(self, obs):
-        front_vehicles = [vehicle for vehicle in obs[1:] if vehicle[0] == 1 and vehicle[1] >= self.ego_vehicle[1]]
+        front_vehicles = [vehicle for vehicle in obs[1:]
+                          if vehicle[0] == 1 and vehicle[1] >= self.ego_vehicle[1]]
 
         current_front_vehicles = [vehicle for vehicle in front_vehicles if
                                   self.find_current_lane(vehicle) == self.ego_current_lane]
@@ -71,17 +72,38 @@ class CollisionAvoidanceTrajectoryPlanner:
         epsilon = cp.Variable((3, self.time_horizon))
 
         # TODO (2): xref, cost, constraints (collision free constraint 제외)를 정의
+        xref[1, :] = (self.ego_current_lane - 1) * self.lane_width
+        xref[2, :] = self.target_vx
         # TODO (3): collision avoidance constraint 구현
         # TODO (4): slack variable 을 이용하여 soft constraints 구현
         xref = np.zeros((self.x_number, self.time_horizon + 1))
         cost = 0.0
         constraints = []
+        for t in rage(self.time_horizon):
+            cost += cp.quad_form(xref[:, t+1] - x[:, t+1], self.Q)
+            cost += cp.quad_form(u[:, t], self.R)
+
+            A, B, C = self._get_dynamics_model()
+            constraints += [x[:, t+1]] == A@x[:, t] + \
+                B@u[:, t] + (C@[self.front_vehicle[3]].A1)
+
+        constrints += [x[:, 0] == x0]
+        constrints += [u[0, :] <= self.ax_constraints[1]]
+        constrints += [u[0, :] >= self.ax_constraints[0]]
+        constrints += [u[1, :] <= self.ay_constraints[1]]
+        constrints += [u[1, :] >= self.ay_constraints[0]]
+        constrints += [x[3, :] >= -0.17 * x[2, :]]
+        constrints += [x[3, :] <= 0.17 * x[2, :]]
+        constrints += [x[1, :] <= self.lane_width * 1.5 - self.vehicle_width / 2]
+        constrints += [x[1, :] >= -self.lane_width * 0.5 + self.vehicle_width / 2]
 
         prob = cp.Problem(cp.Minimize(cost), constraints)
         prob.solve(solver=cp.ECOS, verbose=False)
 
         if prob.status == cp.OPTIMAL or prob.status == cp.OPTIMAL_INACCURATE:
-            self.trajectory_x = -np.array(x.value[0, :]).flatten() + self.front_vehicle[1] - self.vehicle_length
+            self.trajectory_x = - \
+                np.array(x.value[0, :]).flatten() + \
+                self.front_vehicle[1] - self.vehicle_length
             self.trajectory_y = np.array(x.value[1, :]).flatten()
             self.axs = np.array(u.value[0, :]).flatten()
             self.ays = np.array(u.value[1, :]).flatten()
@@ -94,15 +116,40 @@ class CollisionAvoidanceTrajectoryPlanner:
             self.ays = [0]
 
     def _get_state(self):
-        relative_distance = self.front_vehicle[1] - self.ego_vehicle[1] - self.vehicle_length
+        relative_distance = self.front_vehicle[1] - \
+            self.ego_vehicle[1] - self.vehicle_length
 
         return [relative_distance, self.ego_vehicle[2], self.ego_vehicle[3], self.ego_vehicle[4]]
 
     def _get_dynamics_model(self):
         # TODO (1): Vehicle Model 정의
-        A = None
-        B = None
-        C = None
+        # relativ x, y, vx, vy
+        # ax, ay
+
+        A_c = np.matrix([
+            [0, 0, -1, 0],
+            [0, 0, 0, 1],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ])
+
+        B_c = np.matrix([
+            [0, 0],
+            [0, 0],
+            [1, 0],
+            [0, 1]
+        ])
+
+        C_c = np.matrix([
+            [1],
+            [0],
+            [0],
+            [0]
+        ])
+
+        A = np.eye(self.x_number) + self.dt * A_c
+        B = self.dt * B_c
+        C = self.dt * C_c
         return A, B, C
 
 
@@ -137,18 +184,22 @@ def main():
     ax = fig.add_subplot(2, 1, 2)
     ax.plot(times, ays)
     ax.grid(True)
-    ax.set(xlim=[times[0], times[-1]], ylim=[-4, 4], xlabel='Time [s]', ylabel='ay [m/s^2]')
+    ax.set(xlim=[times[0], times[-1]], ylim=[-4, 4],
+           xlabel='Time [s]', ylabel='ay [m/s^2]')
 
     fig = plt.figure(2)
     plt.plot(xs, ys, "b-o", label="trajectory")
     plt.plot(obs[0, 1], obs[0, 2], "yo", label="Ego Vehicle")
     plt.plot(obs[1, 1], obs[1, 2], "ro", label="Front Vehicle")
-    plt.plot([obs[0, 1] - 10, obs[1, 1] + 10], [-2, - 2], "k", label="Constraint")
+    plt.plot([obs[0, 1] - 10, obs[1, 1] + 10],
+             [-2, - 2], "k", label="Constraint")
     plt.plot([obs[0, 1] - 10, obs[1, 1] + 10], [2, 2], "k--")
     plt.plot([obs[0, 1] - 10, obs[1, 1] + 10], [6, 6], "k")
 
-    lf = obs[0, 3] * collision_avoidance_planner.headway_time + collision_avoidance_planner.vehicle_length
-    w = collision_avoidance_planner.lane_width / 2 + collision_avoidance_planner.vehicle_width
+    lf = obs[0, 3] * collision_avoidance_planner.headway_time + \
+        collision_avoidance_planner.vehicle_length
+    w = collision_avoidance_planner.lane_width / \
+        2 + collision_avoidance_planner.vehicle_width
     sign = -1 if -2 <= obs[1, 2] <= 2 else 1
     plt.plot([obs[1, 1] + sign * (obs[1, 2] - 6) * lf / w - lf, obs[1, 1] + sign * (obs[1, 2] + 2) * lf / w - lf],
              [6, -2], "k")

@@ -13,7 +13,7 @@ from parking_lot import ParkingLot
 
 
 class Pose:
-    def __init__(self, x, y, theta):
+    def __init__(self, x, y, theta):  # 차량의 헤딩
         self.x = x
         self.y = y
         self.theta = theta
@@ -21,8 +21,13 @@ class Pose:
 
 # TODO: (1) Implement Node Class
 class Node:
-    def __init__(self):
-        pass
+    def __init__(self, pose, steering, cost, parent_node_index):
+        self.pose = pose
+        self.discrete_x = round(pose.x)
+        self.discrete_y = round(pose.y)
+        self.steering = steering
+        self.cost = cost
+        self.parent_node_index = parent_node_index
 
 
 class HybridAStarRoutePlanner:
@@ -30,10 +35,11 @@ class HybridAStarRoutePlanner:
         self.parking_lot: ParkingLot = parking_lot
 
         # Motion Model
-        self.wheelbase = 2.7
-        steering_degree_inputs = [-40, -20, -10, 0, 10, 20, 40]
-        self.steering_inputs = [math.radians(x) for x in steering_degree_inputs]
-        self.chord_lengths = [2, 1]
+        self.wheelbase = 2.7  # wheel base
+        steering_degree_inputs = [-40, -20, -10, 0, 10, 20, 40]  # 조향각
+        self.steering_inputs = [math.radians(x)
+                                for x in steering_degree_inputs]
+        self.chord_lengths = [2, 1]  # 이동 거리
 
         self.goal_node = None
 
@@ -41,13 +47,15 @@ class HybridAStarRoutePlanner:
         start_node = Node(start_pose, 0, 0, -1)
         self.goal_node = Node(goal_pose, 0, 0, -1)
 
-        open_set = {self.parking_lot.get_grid_index(start_node.discrete_x, start_node.discrete_y): start_node}
+        open_set = {self.parking_lot.get_grid_index(
+            start_node.discrete_x, start_node.discrete_y): start_node}
         closed_set = {}
 
         while open_set:
             current_node_index = min(
                 open_set,
-                key=lambda o: open_set[o].cost + self.calculate_heuristic_cost(open_set[o]),
+                key=lambda o: open_set[o].cost +
+                self.calculate_heuristic_cost(open_set[o]),
             )
             current_node = open_set[current_node_index]
 
@@ -77,12 +85,14 @@ class HybridAStarRoutePlanner:
                         (current_node.discrete_x, current_node.discrete_y),
                         (next_node.discrete_x, next_node.discrete_y),
                 ):
-                    next_node_index = self.parking_lot.get_grid_index(next_node.discrete_x, next_node.discrete_y)
+                    next_node_index = self.parking_lot.get_grid_index(
+                        next_node.discrete_x, next_node.discrete_y)
                     if next_node_index in closed_set:
                         continue
 
                     if next_node_index not in open_set:
-                        open_set[next_node_index] = next_node  # discovered a new node
+                        # discovered a new node
+                        open_set[next_node_index] = next_node
                     else:
                         if open_set[next_node_index].cost > next_node.cost:
                             # This path is the best until now. record it
@@ -104,16 +114,29 @@ class HybridAStarRoutePlanner:
 
     def calculate_next_node(self, current, current_node_index, chord_length, steering):
         # TODO: (2) Implement next node
-        return None
+        theta = current.pose.theta + chord_length * \
+            math.tan(steering) / self.wheelbase
+        x = current.pose.x + chord_length * math.cos(theta)
+        y = current.pose.y + chord_length * math.sin(theta)
+        return Node(
+            Pose(x, y, theta),
+            steering,
+            current.cost + chord_length,
+            current_node_index
+        )
 
     def calculate_heuristic_cost(self, node):
         distance_cost = self.calculate_distance_to_end(node.pose)
-        cost = distance_cost
+        heading_cost = abs(self.change_radians_range(
+            self.goal_node.pose.theta - node.pose.theta))
+        steering_cost = abs(node.steering)
+        cost = distance_cost + 10 * steering_cost + 0.1 * heading_cost  # 가중치 부여
         return cost
 
     def calculate_distance_to_end(self, pose):
         distance = math.sqrt(
-            (pose.x - self.goal_node.pose.x) ** 2 + (pose.y - self.goal_node.pose.y) ** 2
+            (pose.x - self.goal_node.pose.x) ** 2 +
+            (pose.y - self.goal_node.pose.y) ** 2
         )
         return distance
 
@@ -143,9 +166,10 @@ def main():
     plt.plot(obstacle_x, obstacle_y, ".k")
 
     # start and goal pose
-    start_pose = Pose(75.0, 54.0, math.radians(180))
-    goal_pose = Pose(5.0, 54.0, math.radians(180))
-    print(f"Start Hybrid A Star Route Planner (start {start_pose.x, start_pose.y}, end {goal_pose.x, goal_pose.y})")
+    start_pose = Pose(14.0, 4.0, math.radians(0))
+    goal_pose = Pose(69.0, 59.0, math.radians(-90))
+    print(
+        f"Start Hybrid A Star Route Planner (start {start_pose.x, start_pose.y}, end {goal_pose.x, goal_pose.y})")
 
     plt.plot(start_pose.x, start_pose.y, "og")
     plt.plot(goal_pose.x, goal_pose.y, "xb")
@@ -158,7 +182,8 @@ def main():
     plt.axis("equal")
 
     hybrid_a_star_route_planner = HybridAStarRoutePlanner(parking_lot)
-    rx, ry = hybrid_a_star_route_planner.search_route(start_pose, goal_pose, False)
+    rx, ry = hybrid_a_star_route_planner.search_route(
+        start_pose, goal_pose, True)
     plt.plot(rx, ry, "-r")
     plt.pause(0.001)
     plt.show()

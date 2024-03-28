@@ -181,7 +181,7 @@ def main():
     plt.axis("equal")
 
     hybrid_a_star_route_planner = HybridAStarRoutePlanner(parking_lot)
-    rx, ry = hybrid_a_star_route_planner.search_route(start_pose, goal_pose, False)
+    rx, ry = hybrid_a_star_route_planner.search_route(start_pose, goal_pose, True)
     plt.plot(rx, ry, "-r")
     plt.pause(0.001)
     plt.show()
