@@ -4,7 +4,7 @@
 
 ## Path Planning
 
-- 후보 : [MPCC](https://github.com/alexliniger/MPCC)
+- 후보 : MPCC [GITUB](https://github.com/alexliniger/MPCC)
 
 ## Vision
 
