@@ -2,6 +2,8 @@
 
 ## Hardware spec
 
+[구매 항목](https://www.notion.so/0e17647f92db462cb51d649def454c80?pvs=4)
+
 ||
 |---|
 |Jetson Orin Nano|
