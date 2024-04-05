@@ -25,4 +25,7 @@ https://github.com/changh95/fastcampus_slam_codes
 
 ## Reference
 
-[F1 Tenth Research](https://f1tenth.org/research.html)
+[F1Tenth Research](https://f1tenth.org/research.html) \
+[F1TENTH Autonomous Racing Community GITHUB Organization](https://github.com/f1tenth) \
+[F1TENTH Racetrack GITHUB](https://github.com/f1tenth/f1tenth_racetracks) \
+[F1TENTH ROS2 GITHUB](https://github.com/f1tenth/f1tenth_gym_ros)
