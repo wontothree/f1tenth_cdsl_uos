@@ -22,3 +22,7 @@ https://github.com/changh95/fastcampus_slam_codes
 ## Path Planning
 
 - 후보 : MPCC [GITHUB](https://github.com/alexliniger/MPCC) [Paper](https://arxiv.org/pdf/1711.07300.pdf)
+
+## Reference
+
+[F1 Tenth Research](https://f1tenth.org/research.html)
