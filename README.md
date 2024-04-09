@@ -31,3 +31,5 @@ MPCC [GITHUB](https://github.com/alexliniger/MPCC) [Paper](https://arxiv.org/pdf
 [F1TENTH ROS2 GITHUB](https://github.com/f1tenth/f1tenth_gym_ros) \
 [zhm-real - Path Planning](https://github.com/JohannesBetz/PathPlanning) \
 [PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics)
+
+https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file
