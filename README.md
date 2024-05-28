@@ -21,15 +21,21 @@ https://github.com/changh95/fastcampus_slam_codes
 
 ## Path Planning
 
-MPCC [GITHUB](https://github.com/alexliniger/MPCC) [Paper](https://arxiv.org/pdf/1711.07300.pdf)
+- MPCC [GITHUB](https://github.com/alexliniger/MPCC) [Paper](https://arxiv.org/pdf/1711.07300.pdf)
+- MPPI : https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file
 
 ## Reference
 
 [F1Tenth Research](https://f1tenth.org/research.html) \
 [F1TENTH Autonomous Racing Community GITHUB Organization](https://github.com/f1tenth) \
-[F1TENTH Racetrack GITHUB](https://github.com/f1tenth/f1tenth_racetracks) \
-[F1TENTH ROS2 GITHUB](https://github.com/f1tenth/f1tenth_gym_ros) \
 [zhm-real - Path Planning](https://github.com/JohannesBetz/PathPlanning) \
 [PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics)
 
-https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file
+## Simulation Environment
+
+- RVIZ : [F1TENTH ROS2 GITHUB](https://github.com/f1tenth/f1tenth_gym_ros)
+- GAZEBO : https://github.com/linklab-uva/f1tenth_gtc_tutorial
+
+## ROS2 Workspace
+
+- https://github.com/CL2-UWaterloo/f1tenth_ws/tree/main
