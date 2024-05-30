@@ -1,4 +1,4 @@
-# F1tenth PAULWALKER Packages
+# F1tenth Paulwalker Packages
 
 ## Hardware spec
 
