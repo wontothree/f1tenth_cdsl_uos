@@ -1,5 +1,13 @@
 # F1tenth Paulwalker Packages
 
+[https://www.youtube.com/watch?v=BkZ1n_1F-Cg](https://www.youtube.com/watch?v=BkZ1n_1F-Cg)
+
+[https://f1tenth.org/build.html](https://f1tenth.org/build.html)
+
+[https://stevengong.co/notes/F1TENTH-Field-Usage](https://stevengong.co/notes/F1TENTH-Field-Usage)
+
+[https://github.com/f1tenth/f1tenth_system?tab=readme-ov-file](https://github.com/f1tenth/f1tenth_system?tab=readme-ov-file)
+
 ## Hardware spec
 
 [구매 항목](https://www.notion.so/0e17647f92db462cb51d649def454c80?pvs=4)
@@ -29,7 +37,7 @@ https://github.com/changh95/fastcampus_slam_codes
 [F1Tenth Research](https://f1tenth.org/research.html) \
 [F1TENTH Autonomous Racing Community GITHUB Organization](https://github.com/f1tenth) \
 [zhm-real - Path Planning](https://github.com/JohannesBetz/PathPlanning) \
-[PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics)
+[PythonRobotics](https://github.com/AtsushiSakai/PythonRobotics) \
 
 ## Simulation Environment
 
