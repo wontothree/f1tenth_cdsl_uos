@@ -8,6 +8,8 @@
 
 [https://github.com/f1tenth/f1tenth_system?tab=readme-ov-file](https://github.com/f1tenth/f1tenth_system?tab=readme-ov-file)
 
+[https://www.youtube.com/watch?v=BkZ1n_1F-Cg](https://www.youtube.com/watch?v=BkZ1n_1F-Cg)
+
 ## Hardware spec
 
 [구매 항목](https://www.notion.so/0e17647f92db462cb51d649def454c80?pvs=4)
