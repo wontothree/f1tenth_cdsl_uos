@@ -32,7 +32,8 @@ https://github.com/changh95/fastcampus_slam_codes
 ## Path Planning
 
 - MPCC [GITHUB](https://github.com/alexliniger/MPCC) [Paper](https://arxiv.org/pdf/1711.07300.pdf)
-- MPPI : https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file
+- MPPI : https://github.com/ros-navigation/navigation2/tree/main/nav2_mppi_controller
+- SVG-MPPI : https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file
 
 ## Reference
 
