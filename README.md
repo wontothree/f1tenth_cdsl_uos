@@ -10,19 +10,6 @@
 
 [https://www.youtube.com/watch?v=BkZ1n_1F-Cg](https://www.youtube.com/watch?v=BkZ1n_1F-Cg)
 
-## Hardware spec
-
-[구매 항목](https://www.notion.so/0e17647f92db462cb51d649def454c80?pvs=4)
-
-||
-|---|
-|Jetson Orin Nano|
-|Intel Realsense D455|
-
-## Vision
-
-Mask R-CNN [GITHUB](https://github.com/facebookresearch/detectron) [Paper](https://arxiv.org/pdf/1703.06870.pdf)
-
 ## Slam
 
 Cartographer [GITHUM](https://github.com/cartographer-project/cartographer?tab=readme-ov-file)
@@ -51,5 +38,8 @@ https://github.com/changh95/fastcampus_slam_codes
 
 - https://github.com/CL2-UWaterloo/f1tenth_ws/tree/main
 
-안녕
+## Dependencies
 
+```bash
+rosdep install --from-paths src --ignore-src -r -y
+```
