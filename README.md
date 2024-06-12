@@ -11,7 +11,8 @@ rosdep install --from-paths src --ignore-src -r -y
 Path Planning : MPPI
 
 [mppi nav2 ros2 github](https://github.com/ros-navigation/navigation2/tree/main/nav2_mppi_controller) \
-[svg-mppi ros1](https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file)
+[svg-mppi ros1](https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file) \
+https://github.com/bosky2001/f1tenth_mppi
 
 [Jetson Nano Orin](https://www.youtube.com/watch?v=BkZ1n_1F-Cg) \
 [F1tenth Official Website](https://f1tenth.org/build.html) \
