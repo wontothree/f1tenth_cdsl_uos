@@ -1,6 +1,8 @@
 # Stein Variational Guided Model Predictive Path Integral Control
 
-## Dependencies
+## [ROS2] Nav2 MPPI
+
+### Dependencies
 
 Buildtool Dependencies
 
@@ -33,3 +35,28 @@ Test Dependencies
 - ament_lint_auto: 다양한 린트 도구들을 자동으로 실행하여 코드 품질을 검사하는 패키지입니다.
 - ament_lint_common: 일반적인 린트 규칙과 설정을 제공하는 패키지입니다.
 - ament_cmake_gtest: Google Test 프레임워크를 사용하여 C++ 테스트를 작성하고 실행할 수 있게 해주는 도구입니다.
+
+### Files : /src
+
+|- critics
+    |- /constraint_critic.cpp : 제약 조건 평가하는 비판자
+    |- /cost_critic.cpp : 비용을 병가하는 비판자
+    |- /goal_angle_critic.cpp : 목표 각도를 평가하는 비판자
+    |- /goal_critic.cpp : 목표를 평가하는 비판자
+    |- /obstacles_critic.cpp : 장애물을 평가하는 비판자
+    |- /path_align_critic.cpp
+    |- /path_align_legacy_critic.cpp
+    |- /path_angle_critic.cpp
+    |- /path_follow_critic.cpp
+    |- /prefer_forward_critic.cpp
+    |- /twirling_critic.cpp
+    |- /velocity_deadband_critic.cpp
+|- controller.cpp : 주어진 상황에서 제어 입력을 생성하는 주요 컨트롤러를 구현한다.
+|- /critic_manager.cpp : 비판자들을 관리하고 조정하는 클래스
+|- /noise_generator.cpp : 경로 생성 알고리즘에서 확률적인 요소를 추가하는 데 사용되는 노이즈를 생성한다.
+|- /optimizer.cpp : 경로 최적화 알고리즘을 구현한다.
+|- /parameters_handler.cpp : 시스템의 매개변수를 관리한다.
+|- /path_handler.cpp : 경로를 관리하고 조직화하는 클래스와 함수를 포함한다.
+|- /trajectory_visualizer.cpp : 경로를 시각화한다.
+
+## [ROS1] SVG-MPPI
