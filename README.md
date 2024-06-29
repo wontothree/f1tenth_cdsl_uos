@@ -8,9 +8,6 @@ rosdep install --from-paths src --ignore-src -r -y
 
 ## Reference
 
-Path Planning : MPPI
-
-[mppi nav2 ros2 github](https://github.com/ros-navigation/navigation2/tree/main/nav2_mppi_controller) \
 [svg-mppi ros1](https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file) \
 https://github.com/bosky2001/f1tenth_mppi
 
@@ -33,3 +30,7 @@ Simulation Environment
 ROS2 Workspace
 
 https://github.com/CL2-UWaterloo/f1tenth_ws/tree/main
+
+## 기타 참고
+
+[mppi nav2 ros2 github](https://github.com/ros-navigation/navigation2/tree/main/nav2_mppi_controller)
