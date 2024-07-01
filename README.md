@@ -1,5 +1,9 @@
 # F1tenth Paulwalker Packages
 
+- CDSL UOS
+- ROS2 Foxy
+- Ubuntu 20.04
+
 ## Dependencies
 
 ```bash
