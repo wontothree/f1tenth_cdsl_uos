@@ -6,7 +6,7 @@
 
 |Index|Return Type|Function|Input|Description|
 |---|---|---|---|---|
-|1||MPPIControllerROS::MPPIControllerROS|ROS에서 MPPI 컨트롤러의 노드를 초기화하는 생성자 함수다. 이 함수는 노드가 시작될 때 여러 파라미터를 로드하고 다양한 ROS 컴포넌트를 설정하며 필요한 데이터 스트림을 구독하고 게시할 준비를 한다.|
+|1||MPPIControllerROS::MPPIControllerROS||ROS에서 MPPI 컨트롤러의 노드를 초기화하는 생성자 함수다. 이 함수는 노드가 시작될 때 여러 파라미터를 로드하고 다양한 ROS 컴포넌트를 설정하며 필요한 데이터 스트림을 구독하고 게시할 준비를 한다.|
 |2|void|MPPIControllerROS::callback_odom_with_pose|const nav_msgs::Odometry& odom|Odometry 정보(선형 속도, 각속도)를 기반으로 로봇의 위치와 자세를 추정한다.|
 |3|void|MPPIControllerROS::callback_odom|const nav_msgs::Odometry& odom|Odom 정보를 입력받아 로봇의 현재 속도 정보를 업데이트하는 함수. 위치 추정 없이 로봇의 속도만을 사용하는 간단한 형태의 함수. 주로 로봇의 속도 정보만 필요로 하는 시스템에서 사용된다.|
 |4|void|MPPIControllerROS::callback_activate_signal|const std_msgs::Bool& is_activate|ROS에서 std_msgs::Bool 타입의 메시지를 입력받아 내부 상태 플래그를 업데이트하는 콜백 함수. 이 함수는 로봇 시스템의 활성화 상태를 제어하는 . 데사용된다.|
