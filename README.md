@@ -38,3 +38,7 @@ https://github.com/CL2-UWaterloo/f1tenth_ws/tree/main
 ## 기타 참고
 
 [mppi nav2 ros2 github](https://github.com/ros-navigation/navigation2/tree/main/nav2_mppi_controller)
+
+[f1tenth_gym](https://github.com/f1tenth/f1tenth_gym)
+
+[f1tenth_gym_ros](https://github.com/f1tenth/f1tenth_gym_ros?tab=readme-ov-file)
