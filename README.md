@@ -1,7 +1,7 @@
 # F1tenth CDSL_UOS Packages
 
-├── local_costmap_generator                 # Local planner
-├──                                         # 
+    ├── local_costmap_generator                 # Local planner
+    ├──                                         # 
 
 # Dependencies
 
