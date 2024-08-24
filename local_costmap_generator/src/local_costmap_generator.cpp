@@ -1,8 +1,10 @@
 #include "local_costmap_generator.hpp"
 
-LocalCostmapGenerator::LocalCostmapGenerator() : Node("laser_processor_node"), lidarscan_topic("/scan")
+LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_node")
 {
-    subscription_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+    laserscan_topic = "/scan";
+
+    sub_scan_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
         lidarscan_topic, 
         10, 
         std::bind(&LocalCostmapGenerator::scan_callback, this, std::placeholders::_1)

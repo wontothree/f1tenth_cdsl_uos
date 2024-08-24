@@ -12,10 +12,10 @@ public:
 
 private:
     // Topic
-    std::string lidarscan_topic;
+    std::string laserscan_topic;
 
     // Create ROS subscribers
-    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr subscription_;
+    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr sub_scan_;
 
     // Callback function to process the laser scan data
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg);
