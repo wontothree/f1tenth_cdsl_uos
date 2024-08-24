@@ -5,15 +5,30 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     laserscan_topic = "/scan";
 
     sub_scan_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
-        lidarscan_topic, 
+        laserscan_topic,
         10, 
         std::bind(&LocalCostmapGenerator::scan_callback, this, std::placeholders::_1)
     );
+
+    is_laserscan_received_ = true;
+
+    timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalCostmapGenerator::timer_callback, this));
 }
 
-void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg)
+void LocalCostmapGenerator::scan_callback([[maybe_unused]] const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg)
 {
-    print_laser_data(scan_msg);
+    // print_laser_data(scan_msg);
+}
+
+void LocalCostmapGenerator::timer_callback()
+{
+    if (!is_laserscan_received_) {
+        RCLCPP_INFO(this->get_logger(), "Waiting for laser scan data...");
+        return;
+    }
+
+    // timer_callback function test
+    RCLCPP_INFO(this->get_logger(), "Laser scan data received and processing...");
 }
 
 void LocalCostmapGenerator::print_laser_data(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg)

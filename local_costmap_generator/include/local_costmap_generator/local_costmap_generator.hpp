@@ -14,13 +14,18 @@ private:
     // Topic
     std::string laserscan_topic;
 
-    // Create ROS subscribers
+    // subscribers
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr sub_scan_;
 
-    // Callback function to process the laser scan data
+    bool is_laserscan_received_;
+
+    rclcpp::TimerBase::SharedPtr timer_;
+
+    // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg);
 
-    // Function to print laser scan data
+    void timer_callback();
+
     void print_laser_data(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg);
 };
 
