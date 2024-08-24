@@ -19,7 +19,7 @@ private:
     std::string laserscan_topic;
 
     // subscribers
-    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr sub_scan_;
+    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr sub_laserscan_;
 
     bool is_laserscan_received_;
 
@@ -29,6 +29,7 @@ private:
 
     std::shared_ptr<sensor_msgs::msg::PointCloud2> pointcloud2_;
 
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_pointcloud2_;
 
     // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);

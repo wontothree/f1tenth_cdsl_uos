@@ -4,7 +4,7 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 {
     laserscan_topic = "/scan";
 
-    sub_scan_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
+    sub_laserscan_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
         laserscan_topic,
         10, 
         std::bind(&LocalCostmapGenerator::scan_callback, this, std::placeholders::_1)
@@ -17,6 +17,8 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     laser_projection_ = std::make_shared<laser_geometry::LaserProjection>();
 
     pointcloud2_ = std::make_shared<sensor_msgs::msg::PointCloud2>();
+
+    pub_pointcloud2_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/pointcloud2", 10);
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
@@ -38,6 +40,11 @@ void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::Las
 {
     laser_projection_->projectLaser(*laserscan_msg, *pointcloud2_);
     print_pointcloud2(pointcloud2_);
+
+    // test
+    RCLCPP_INFO(this->get_logger(), "Publishing PointCloud2 message");
+
+    pub_pointcloud2_->publish(*pointcloud2_);
 }
 
 void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
