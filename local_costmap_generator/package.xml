@@ -7,10 +7,15 @@
   <maintainer email="prepared7913@naver.com">root</maintainer>
   <license>MIT</license>
 
+  <!-- Dependencies for build and execution -->
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <!-- Dependencies for ROS2 -->
   <depend>rclcpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>laser_geometry</depend>
 
+  <!-- Dependencies for test -->
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 

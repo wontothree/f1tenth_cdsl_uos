@@ -4,6 +4,8 @@
 #include <string>
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "laser_geometry/laser_geometry.hpp"
 
 class LocalCostmapGenerator : public rclcpp::Node {
 
@@ -11,6 +13,8 @@ public:
     LocalCostmapGenerator();
 
 private:
+    // variables
+
     // Topic
     std::string laserscan_topic;
 
@@ -21,12 +25,19 @@ private:
 
     rclcpp::TimerBase::SharedPtr timer_;
 
+    std::shared_ptr<laser_geometry::LaserProjection> laser_projection_;
+
+    std::shared_ptr<sensor_msgs::msg::PointCloud2> pointcloud2_;
+
+
     // functions
-    void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg);
+    void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
 
     void timer_callback();
 
-    void print_laser_data(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg);
+    void laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
+
+    void print_pointcloud2(const sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2_msg);
 };
 
 #endif // LOCAL_COSTMAP_GENERATOR_HPP

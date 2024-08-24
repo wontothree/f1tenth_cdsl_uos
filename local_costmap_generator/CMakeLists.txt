@@ -17,20 +17,24 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
-
-# find dependencies
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+
+find_package(laser_geometry REQUIRED)
+find_package(tf2 REQUIRED)
 
 # Include Cpp "include" directory
 include_directories(include/local_costmap_generator)
 
 # Create Cpp executable
 add_executable(local_costmap_generator_node src/local_costmap_generator.cpp src/local_costmap_generator_node.cpp)
-ament_target_dependencies(local_costmap_generator_node rclcpp sensor_msgs)
+ament_target_dependencies(local_costmap_generator_node 
+  rclcpp
+  sensor_msgs
+  
+  laser_geometry
+  tf2
+)
 
 
 # Install Cpp executables

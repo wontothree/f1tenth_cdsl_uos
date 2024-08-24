@@ -10,14 +10,20 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
         std::bind(&LocalCostmapGenerator::scan_callback, this, std::placeholders::_1)
     );
 
-    is_laserscan_received_ = true;
+    is_laserscan_received_ = false;
 
     timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalCostmapGenerator::timer_callback, this));
+
+    laser_projection_ = std::make_shared<laser_geometry::LaserProjection>();
+
+    pointcloud2_ = std::make_shared<sensor_msgs::msg::PointCloud2>();
 }
 
-void LocalCostmapGenerator::scan_callback([[maybe_unused]] const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg)
+void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
 {
-    // print_laser_data(scan_msg);
+    laserscan_to_pointcloud2(laserscan_msg);
+
+    is_laserscan_received_ = true;
 }
 
 void LocalCostmapGenerator::timer_callback()
@@ -26,20 +32,21 @@ void LocalCostmapGenerator::timer_callback()
         RCLCPP_INFO(this->get_logger(), "Waiting for laser scan data...");
         return;
     }
-
-    // timer_callback function test
-    RCLCPP_INFO(this->get_logger(), "Laser scan data received and processing...");
 }
 
-void LocalCostmapGenerator::print_laser_data(const sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg)
+void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
 {
-    // Print some basic information
-    RCLCPP_INFO(this->get_logger(), "Received LaserScan data:");
-    RCLCPP_INFO(this->get_logger(), "Angle Min: %f, Angle Max: %f", scan_msg->angle_min, scan_msg->angle_max);
-    RCLCPP_INFO(this->get_logger(), "Range Min: %f, Range Max: %f", scan_msg->range_min, scan_msg->range_max);
+    laser_projection_->projectLaser(*laserscan_msg, *pointcloud2_);
+    print_pointcloud2(pointcloud2_);
+}
 
-    // Print the range values
-    for (size_t i = 0; i < scan_msg->ranges.size(); ++i) {
-        RCLCPP_INFO(this->get_logger(), "Range[%zu]: %f", i, scan_msg->ranges[i]);
-    }
+void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
+{
+    // 메시지 내용을 간단히 출력
+    std::ostringstream oss;
+    oss << "PointCloud2: " << std::endl;
+    oss << "  Width: " << pointcloud2->width << std::endl;
+    oss << "  Height: " << pointcloud2->height << std::endl;
+    oss << "  Points: " << pointcloud2->width * pointcloud2->height << std::endl;
+    RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
 }
