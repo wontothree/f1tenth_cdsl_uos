@@ -23,7 +23,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(laser_geometry REQUIRED)
 find_package(tf2 REQUIRED)
 
-find_package(PCL REQUIRED)
+find_package(pcl_ros REQUIRED)
 find_package(pcl_conversions REQUIRED)
 
 # Include Cpp "include" directory
@@ -34,12 +34,10 @@ add_executable(local_costmap_generator_node src/local_costmap_generator.cpp src/
 ament_target_dependencies(local_costmap_generator_node 
   rclcpp
   sensor_msgs
-  
   laser_geometry
   tf2
-  
-  PCL
   pcl_conversions
+  pcl_ros
 )
 
 

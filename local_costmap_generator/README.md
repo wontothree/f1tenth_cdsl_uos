@@ -16,6 +16,7 @@ sudo apt update
 sudo apt install libpcl-dev
 
 sudo apt-get install ros-foxy-pcl-conversions
+sudo apt install ros-foxy-pcl-ros
 ```
 
 # Variables
