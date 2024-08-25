@@ -42,20 +42,22 @@ void LocalCostmapGenerator::timer_callback()
 void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
 {
     laser_projection_->projectLaser(*laserscan_msg, *pointcloud2_);
-    print_pointcloud2(pointcloud2_);
-
-    // test
-    RCLCPP_INFO(this->get_logger(), "Publishing PointCloud2 message");
+    // print_pointcloud2(pointcloud2_);
 
     // publish
-    pub_pointcloud2_->publish(*pointcloud2_);
+    // pub_pointcloud2_->publish(*pointcloud2_);
 }
 
 void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
 {
     pcl::fromROSMsg(*pointcloud2, *pcl_);
+
+    // test
+    print_pcl(pcl_);
 }
 
+
+// functions for test
 void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
 {
     // 메시지 내용을 간단히 출력
@@ -64,5 +66,15 @@ void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud
     oss << "  Width: " << pointcloud2->width << std::endl;
     oss << "  Height: " << pointcloud2->height << std::endl;
     oss << "  Points: " << pointcloud2->width * pointcloud2->height << std::endl;
+    RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
+}
+
+void LocalCostmapGenerator::print_pcl(const pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
+{
+    std::ostringstream oss;
+    oss << "PCL PointCloud: " << std::endl;
+    for (const auto& point : pcl->points) {
+        oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
+    }
     RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
 }

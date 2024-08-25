@@ -49,6 +49,8 @@ private:
     void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2);
 
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
+
+    void print_pcl(const pcl::PointCloud<pcl::PointXYZ>::Ptr pcl);
 };
 
 #endif // LOCAL_COSTMAP_GENERATOR_HPP
