@@ -6,6 +6,11 @@
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
 #include "laser_geometry/laser_geometry.hpp"
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
+
+
 
 class LocalCostmapGenerator : public rclcpp::Node {
 
@@ -31,6 +36,8 @@ private:
 
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_pointcloud2_;
 
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_;
+
     // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
 
@@ -38,7 +45,9 @@ private:
 
     void laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
 
-    void print_pointcloud2(const sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2_msg);
+    void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2);
+
+    void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 };
 
 #endif // LOCAL_COSTMAP_GENERATOR_HPP

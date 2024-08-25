@@ -19,6 +19,8 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     pointcloud2_ = std::make_shared<sensor_msgs::msg::PointCloud2>();
 
     pub_pointcloud2_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/pointcloud2", 10);
+
+    pcl_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
@@ -44,10 +46,16 @@ void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::Las
     // test
     RCLCPP_INFO(this->get_logger(), "Publishing PointCloud2 message");
 
+    // publish
     pub_pointcloud2_->publish(*pointcloud2_);
 }
 
-void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
+void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
+{
+    pcl::fromROSMsg(*pointcloud2, *pcl_);
+}
+
+void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
 {
     // 메시지 내용을 간단히 출력
     std::ostringstream oss;
