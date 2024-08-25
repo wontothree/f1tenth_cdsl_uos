@@ -26,6 +26,7 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
 {
     laserscan_to_pointcloud2(laserscan_msg);
+    pointcloud2_to_pcl(pointcloud2_);
 
     is_laserscan_received_ = true;
 }
