@@ -128,41 +128,41 @@ void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXY
     print_pcl_robot_frame();
 }
 
-std::vector<grid_map::Index> LocalCostmapGenerator::pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const
-{
-    grid_map::Matrix& costmap_ = costmap->get("collision_layer");
+// std::vector<grid_map::Index> LocalCostmapGenerator::pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const
+// {
+//     grid_map::Matrix& costmap_ = costmap->get("collision_layer");
 
-    costmap_.setZero();
+//     costmap_.setZero();
 
-    std::vector<grid_map::Index> occupied_indices(pcl->points.size());
+//     std::vector<grid_map::Index> occupied_indices(pcl->points.size());
 
-    #pragma omp parallel for num_threads(thread_num_)
-    for (unsigned int i = 0; i < pcl->points.size(); ++i) {
-        const auto& point = pcl->points[i];
+//     #pragma omp parallel for num_threads(thread_num_)
+//     for (unsigned int i = 0; i < pcl->points.size(); ++i) {
+//         const auto& point = pcl->points[i];
 
-        if (costmap->isInside(grid_map::Position(point.x, point.y))) {
-            grid_map::Index index;
-            costmap->getIndex(grid_map::Position(point.x, point.y), index);
-            costmap_(index.x(), index.y()) = cell_occupancy_value;
-            occupied_indices[i] = index;
-        } else {
-            occupied_indices[i] = grid_map::Index(-1, -1);
-        }
-    }
+//         if (costmap->isInside(grid_map::Position(point.x, point.y))) {
+//             grid_map::Index index;
+//             costmap->getIndex(grid_map::Position(point.x, point.y), index);
+//             costmap_(index.x(), index.y()) = cell_occupancy_value;
+//             occupied_indices[i] = index;
+//         } else {
+//             occupied_indices[i] = grid_map::Index(-1, -1);
+//         }
+//     }
 
-    occupied_indices.erase(
-        std::remove_if(
-            occupied_indices.begin(), occupied_indices.end(),
-            [](const grid_map::Index& index) {
-                return index.x() == -1 && index.y() == -1;
-            }
-        ),
-        occupied_indices.end()
-    );
+//     occupied_indices.erase(
+//         std::remove_if(
+//             occupied_indices.begin(), occupied_indices.end(),
+//             [](const grid_map::Index& index) {
+//                 return index.x() == -1 && index.y() == -1;
+//             }
+//         ),
+//         occupied_indices.end()
+//     );
 
 
-    return occupied_indices;
-}
+//     return occupied_indices;
+// }
 
 // functions for test
 void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)

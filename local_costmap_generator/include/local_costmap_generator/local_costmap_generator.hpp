@@ -20,11 +20,6 @@
 
 #include <pcl/filters/crop_box.h>
 
-#include <grid_map_ros/grid_map_ros.hpp>
-#include <grid_map_ros/GridMapRosConverter.hpp>
-#include <grid_map_core/GridMap.hpp>
-#include <grid_map_core/TypeDefs.hpp>
-
 #ifdef _OPENMP
 #include <omp.h>
 #endif
@@ -103,7 +98,7 @@ private:
     void remove_pcl_within_robot(pcl::PointCloud<pcl::PointXYZ>::Ptr pcl);
 
     // 6
-    void pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const;
+    // void pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const;
 
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 

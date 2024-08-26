@@ -14,8 +14,6 @@ rosdep install --from-paths src --ignore-src -r -y
 
 # Simulation
 
-- Docker Desktop에서 f1tenth_gym_ros image를 실행한다.
-
 - f1tenth_gym_ros의 docker-compose.yml 파일이 있는 경로에서 다음 명령어를 통해 sim-1와 novnc-1을 실행한다.
 
 ```bash

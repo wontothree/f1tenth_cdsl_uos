@@ -31,12 +31,6 @@ find_package(tf2_ros)
 find_package(tf2_eigen)
 find_package(PCL REQUIRED)
 
-find_package(grid_map_ros REQUIRED)
-find_package(grid_map_core REQUIRED)
-find_package(grid_map_cv REQUIRED)
-find_package(grid_map_msgs REQUIRED)
-find_package(OpenMP REQUIRED)
-
 # Include Cpp "include" directory
 include_directories(include/local_costmap_generator)
 
@@ -53,11 +47,6 @@ ament_target_dependencies(local_costmap_generator_node
   tf2_ros
   tf2_eigen
   PCL
-  grid_map_ros
-  grid_map_core
-  grid_map_cv
-  grid_map_msgs
-  OpenMP
 )
 
 
