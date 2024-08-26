@@ -12,7 +12,11 @@
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
 
-
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "tf2_ros/buffer.h"
+#include "tf2_ros/transform_listener.h"
+#include "tf2_eigen/tf2_eigen.h"
+#include "pcl/transform.h"
 
 class LocalCostmapGenerator : public rclcpp::Node {
 
@@ -40,11 +44,15 @@ private:
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_;
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr preprocessed_pcl_;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_preprocessed_;
 
     std::string robot_frame_id_;
-
     std::string sensor_frame_id_;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_sensor_frame_;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_robot_frame_;
+    geometry_msgs::msg::TransformStamped transform_stamped_;
+    tf2_ros::Buffer tf_buffer_;
+    tf2_ros::TransformListener tf_listener_;
 
     // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
@@ -55,9 +63,9 @@ private:
 
     void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2);
 
-    void preprocess_pointcloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr preprocessed_pcl);
+    void preprocess_pointcloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed);
 
-    void sensorFrame_to_robotFrame();
+    void sensor_frame_to_robot_frame(const std::string& robot_frame_id, const std::string& sensor_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame);
 
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 

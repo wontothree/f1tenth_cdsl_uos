@@ -26,6 +26,11 @@ find_package(tf2 REQUIRED)
 find_package(pcl_ros REQUIRED)
 find_package(pcl_conversions REQUIRED)
 
+find_package(geometry_msgs REQUIRED)
+find_package(tf2_ros)
+find_package(tf2_eigen)
+find_package(PCL REQUIRED)
+
 # Include Cpp "include" directory
 include_directories(include/local_costmap_generator)
 
@@ -38,6 +43,10 @@ ament_target_dependencies(local_costmap_generator_node
   tf2
   pcl_conversions
   pcl_ros
+  geometry_msgs
+  tf2_ros
+  tf2_eigen
+  PCL
 )
 
 
