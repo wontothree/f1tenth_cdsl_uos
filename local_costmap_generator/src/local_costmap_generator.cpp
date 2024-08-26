@@ -12,7 +12,7 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 
     is_laserscan_received_ = false;
 
-    timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalCostmapGenerator::timer_callback, this));
+    timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&LocalCostmapGenerator::timer_callback, this));
 
     laser_projection_ = std::make_shared<laser_geometry::LaserProjection>();
 
@@ -103,6 +103,21 @@ void LocalCostmapGenerator::print_pcl(const pcl::PointCloud<pcl::PointXYZ>::Cons
     std::ostringstream oss;
     oss << "PCL PointCloud: " << std::endl;
     for (const auto& point : pcl->points) {
+        oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
+    }
+    RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
+}
+
+void LocalCostmapGenerator::print_pcl_robot_frame()
+{
+    if (pcl_robot_frame_->empty()) {
+        RCLCPP_INFO(this->get_logger(), "pcl_robot_frame_ is empty.");
+        return;
+    }
+
+    std::ostringstream oss;
+    oss << "pcl_robot_frame_ PointCloud: " << std::endl;
+    for (const auto& point : pcl_robot_frame_->points) {
         oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
     }
     RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());

@@ -12,7 +12,7 @@
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-# Implement
+# Simulation
 
 - Docker Desktop에서 f1tenth_gym_ros image를 실행한다.
 
@@ -43,19 +43,14 @@ ros2 launch f1tenth_gym_ros gym_bridge_launch.py
 - 다음 명령어들을 통해 colcon build를 하여 수정사항을 반영한다.
 
 ```bash
-source /opt/ros/foxy/setup.bash
-cd ~/sim_ws
-source install/local_setup.bash
 colcon build
+// or
+colcon build --packages-select <package_name>
 ```
 
 - node를 실행한다.
 
 ```bash
-. /opt/ros/foxy/setup.bash
-cd ~/sim_ws
-. install/setup.bash
-
 ros2 run <package_name> <node_name>
 ```
 
