@@ -45,28 +45,29 @@ private:
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_;
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_preprocessed_;
-
     std::string robot_frame_id_;
     std::string sensor_frame_id_;
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_sensor_frame_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_robot_frame_;
     geometry_msgs::msg::TransformStamped transform_stamped_;
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
 
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_removed_within_robot_;
+
     // functions
-    void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
+    void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan);
 
     void timer_callback();
 
-    void laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
+    void laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan, sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2);
 
-    void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2);
+    void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2, pcl::PointCloud<pcl::PointXYZ>::Ptr pcl);
 
-    void preprocess_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed);
+    void preprocess_pcl(const pcl::PointCloud<pcl::PointXYZ>::Ptr pcl);
 
     void sensor_frame_to_robot_frame(const std::string& sensor_frame_id, const std::string& robot_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame);
+
+    // void remove_pcl_within_robot(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_removed_within_robot);
 
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 

@@ -22,18 +22,15 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 
     pcl_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 
-    pcl_preprocessed_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
-
     robot_frame_id_ = "ego_racecar/base_link";
     sensor_frame_id_ = "ego_racecar/laser";
-    pcl_sensor_frame_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
     pcl_robot_frame_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 }
 
-void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
+void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)
 {
-    laserscan_to_pointcloud2(laserscan_msg);
-    pointcloud2_to_pcl(pointcloud2_);
+    laserscan_to_pointcloud2(laserscan, pointcloud2_);
+    pointcloud2_to_pcl(pointcloud2_, pcl_);
 
     is_laserscan_received_ = true;
 }
@@ -45,31 +42,31 @@ void LocalCostmapGenerator::timer_callback()
         return;
     }
 
-    preprocess_pcl(pcl_, pcl_preprocessed_);
+    preprocess_pcl(pcl_);
 
-    sensor_frame_to_robot_frame(sensor_frame_id_, robot_frame_id_, pcl_preprocessed_, pcl_robot_frame_);
+    sensor_frame_to_robot_frame(sensor_frame_id_, robot_frame_id_, pcl_, pcl_robot_frame_);
 }
 
-void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
+void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan, sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
 {
-    laser_projection_->projectLaser(*laserscan_msg, *pointcloud2_);
+    laser_projection_->projectLaser(*laserscan, *pointcloud2);
     // print_pointcloud2(pointcloud2_);
 
     // publish
     // pub_pointcloud2_->publish(*pointcloud2_);
 }
 
-void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
+void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2, pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
 {
-    pcl::fromROSMsg(*pointcloud2, *pcl_);
+    pcl::fromROSMsg(*pointcloud2, *pcl);
 
     // test
     // print_pcl(pcl_);
 }
 
-void LocalCostmapGenerator::preprocess_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed)
+void LocalCostmapGenerator::preprocess_pcl(pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
 {
-    *pcl_preprocessed = *pcl;
+    *pcl = *pcl;
 }
 
 void LocalCostmapGenerator::sensor_frame_to_robot_frame(const std::string& sensor_frame_id, const std::string& robot_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame)
@@ -84,6 +81,8 @@ void LocalCostmapGenerator::sensor_frame_to_robot_frame(const std::string& senso
     const Eigen::Isometry3d transform_matrix = tf2::transformToEigen(transform_stamped_.transform);
 
     pcl::transformPointCloud(*pcl_sensor_frame, *pcl_robot_frame, transform_matrix.matrix().cast<float>());
+
+    // print_pcl_robot_frame();
 }
 
 // functions for test
