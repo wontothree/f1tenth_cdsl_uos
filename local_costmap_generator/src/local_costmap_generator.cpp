@@ -12,7 +12,7 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 
     is_laserscan_received_ = false;
 
-    timer_ = this->create_wall_timer(std::chrono::milliseconds(10), std::bind(&LocalCostmapGenerator::timer_callback, this));
+    timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalCostmapGenerator::timer_callback, this));
 
     laser_projection_ = std::make_shared<laser_geometry::LaserProjection>();
 
@@ -22,14 +22,33 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 
     pcl_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 
+    // senor_frame_to_robot_frame
     robot_frame_id_ = "ego_racecar/base_link";
     sensor_frame_id_ = "ego_racecar/laser";
     pcl_robot_frame_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
+
+    // remove_pcl_within_robot
+    pcl::CropBox<pcl::PointXYZ> crop_box_filter_;
+    double rigid_body_shape_baselink2front = 0.3;
+    double rigid_body_shape_baselink2rear = 0.2;
+    double rigid_body_shape_baselink2right = 0.2;
+    double rigid_body_shape_baselink2left = 0.2;
+    double min_high = 0.0;
+    double max_high = 10.0;
+    double min_x = -rigid_body_shape_baselink2rear;
+    double max_x = rigid_body_shape_baselink2front;
+    double min_y = -rigid_body_shape_baselink2right;
+    double max_y = rigid_body_shape_baselink2left;
+    crop_box_min_ = Eigen::Vector4f(min_x, min_y, min_high, 1.0);
+    crop_box_max_ = Eigen::Vector4f(max_x, max_y, max_high, 1.0);
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)
 {
+    // 1. sensor_msgs::LaserScan 2 sensor_msgs::PointCloud2
     laserscan_to_pointcloud2(laserscan, pointcloud2_);
+
+    // 2. sensor_msgs::PointCloud2 2 pcl::PointCloud
     pointcloud2_to_pcl(pointcloud2_, pcl_);
 
     is_laserscan_received_ = true;
@@ -42,9 +61,18 @@ void LocalCostmapGenerator::timer_callback()
         return;
     }
 
+    // 3. preprocess
     preprocess_pcl(pcl_);
 
+    // 4. sensor frame coordinate 2 robot frame coordinate
     sensor_frame_to_robot_frame(sensor_frame_id_, robot_frame_id_, pcl_, pcl_robot_frame_);
+
+    // 5. remove cloud points within robot
+    remove_pcl_within_robot(pcl_robot_frame_);
+
+    // 6. pcl 2 costmap
+
+    // 7. inflate rigid body
 }
 
 void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan, sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
@@ -83,6 +111,17 @@ void LocalCostmapGenerator::sensor_frame_to_robot_frame(const std::string& senso
     pcl::transformPointCloud(*pcl_sensor_frame, *pcl_robot_frame, transform_matrix.matrix().cast<float>());
 
     // print_pcl_robot_frame();
+}
+
+void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
+{
+    crop_box_filter_.setInputCloud(pcl);
+    crop_box_filter_.setNegative(true);
+    crop_box_filter_.setMin(crop_box_min_);
+    crop_box_filter_.setMax(crop_box_max_);
+    crop_box_filter_.filter(*pcl);
+
+    print_pcl_robot_frame();
 }
 
 // functions for test

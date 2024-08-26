@@ -16,8 +16,9 @@
 #include "tf2_ros/buffer.h"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_eigen/tf2_eigen.h"
-// #include "pcl/transform.h"
 #include <pcl/common/transforms.h>
+
+#include <pcl/filters/crop_box.h>
 
 class LocalCostmapGenerator : public rclcpp::Node {
 
@@ -45,6 +46,7 @@ private:
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_;
 
+    // senor_frame_to_robot_frame
     std::string robot_frame_id_;
     std::string sensor_frame_id_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_robot_frame_;
@@ -52,7 +54,20 @@ private:
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
 
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_removed_within_robot_;
+    // remove_pcl_within_robot
+    pcl::CropBox<pcl::PointXYZ> crop_box_filter_;
+    double rigid_body_shape_baselink2front;
+    double rigid_body_shape_baselink2rear;
+    double rigid_body_shape_baselink2right;
+    double rigid_body_shape_baselink2left;
+    double min_high;
+    double max_high;
+    double min_x;
+    double max_x;
+    double min_y;
+    double max_y;
+    Eigen::Vector4f crop_box_min_;
+    Eigen::Vector4f crop_box_max_;
 
     // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan);
@@ -67,7 +82,7 @@ private:
 
     void sensor_frame_to_robot_frame(const std::string& sensor_frame_id, const std::string& robot_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame);
 
-    // void remove_pcl_within_robot(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_removed_within_robot);
+    void remove_pcl_within_robot(pcl::PointCloud<pcl::PointXYZ>::Ptr pcl);
 
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 
