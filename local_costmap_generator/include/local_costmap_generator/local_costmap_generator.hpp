@@ -5,6 +5,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "sensor_msgs/msg/point_cloud2.hpp"
+
 #include "laser_geometry/laser_geometry.hpp"
 
 #include <pcl/point_cloud.h>
@@ -39,6 +40,12 @@ private:
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_;
 
+    pcl::PointCloud<pcl::PointXYZ>::Ptr preprocessed_pcl_;
+
+    std::string robot_frame_id_;
+
+    std::string sensor_frame_id_;
+
     // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg);
 
@@ -48,9 +55,13 @@ private:
 
     void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2);
 
+    void preprocess_pointcloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr preprocessed_pcl);
+
+    void sensorFrame_to_robotFrame();
+
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 
-    void print_pcl(const pcl::PointCloud<pcl::PointXYZ>::Ptr pcl);
+    void print_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl);
 };
 
 #endif // LOCAL_COSTMAP_GENERATOR_HPP

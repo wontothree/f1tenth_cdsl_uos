@@ -21,6 +21,8 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     pub_pointcloud2_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/pointcloud2", 10);
 
     pcl_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
+
+    processed_pcl_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
@@ -56,6 +58,15 @@ void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointClou
     print_pcl(pcl_);
 }
 
+void LocalCostmapGenerator::preprocess_pointcloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr preprocessed_pcl)
+{
+    preprocessed_pcl = pcl;
+}
+
+void LocalCostmapGenerator::sensorFrame_to_robotFrame()
+{
+    
+}
 
 // functions for test
 void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
@@ -69,7 +80,7 @@ void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud
     RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
 }
 
-void LocalCostmapGenerator::print_pcl(const pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
+void LocalCostmapGenerator::print_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl)
 {
     std::ostringstream oss;
     oss << "PCL PointCloud: " << std::endl;

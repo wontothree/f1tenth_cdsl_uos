@@ -31,18 +31,21 @@ sudo apt install ros-foxy-pcl-ros
 |std::shared_ptr<sensor_msgs::msg::PointCloud2>|pointcloud2_|point cloud 데이터를 저장하는 스마트 포인터|
 |rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr|pub_pointcloud2_|PointCloud2 Publisher|
 |pcl::PointCloud<pcl::PointXYZ>::Ptr|pcl_|PCL instance|
+|pcl::PointCloud<pcl::PointXYZ>::Ptr|preprocessed_pcl_|전처리된 pcl 데이터를 저장한다.|
+|std::string|robot_frame_id_||
+|std::string|sensor_frame_id_||
 
 # Functions
 
-|Return Type|Function Name|Description|
-|---|---|---|
-||LocalCostmapGenerator|생성자 함수|
-|void|scan_callback||
-|void|timer_callback||
-|void|laserscan_to_pointcloud2| sensor_msgs::LaserScan을 sensor_msgs::PointCloud2로 변환한다.|
-|void|pointcloud2_to_pcl|sensor_msgs::PointCloud2를 pcl::PointCloud로 변환한다.|
+|Return Type|Function Name|Input|Description|
+|---|---|---|---|
+||LocalCostmapGenerator||생성자 함수|
+|void|scan_callback|||
+|void|timer_callback|
+|void|laserscan_to_pointcloud2||sensor_msgs::LaserScan을 sensor_msgs::PointCloud2로 변환한다.|
+|void|pointcloud2_to_pcl||sensor_msgs::PointCloud2를 pcl::PointCloud로 변환한다.|
 |void|preprocess_pcl||
-|void|sensorcoordinate_to_robotcoordinate||
-|void|crop_points_within_robot||
-|void|pcl_to_costmap||
-|void|inflate_rigidbody||
+|void|sensorFrame_to_robotFrame|const std::string& robot_frame_id, const std::string& sensor_frame_id|센서 프레임 좌표계를 로봇 프레임 좌표계로 변환한다.|
+|void|crop_points_within_robot|||
+|void|pcl_to_costmap|||
+|void|inflate_rigidbody|||
