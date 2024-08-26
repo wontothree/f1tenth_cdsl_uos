@@ -44,6 +44,10 @@ void LocalCostmapGenerator::timer_callback()
         RCLCPP_INFO(this->get_logger(), "Waiting for laser scan data...");
         return;
     }
+
+    preprocess_pcl(pcl_, pcl_preprocessed_);
+
+    sensor_frame_to_robot_frame(sensor_frame_id_, robot_frame_id_, pcl_preprocessed_, pcl_robot_frame_);
 }
 
 void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan_msg)
@@ -60,15 +64,15 @@ void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointClou
     pcl::fromROSMsg(*pointcloud2, *pcl_);
 
     // test
-    print_pcl(pcl_);
+    // print_pcl(pcl_);
 }
 
-void LocalCostmapGenerator::preprocess_pointcloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed)
+void LocalCostmapGenerator::preprocess_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed)
 {
-    pcl_preprocessed = pcl;
+    *pcl_preprocessed = *pcl;
 }
 
-void LocalCostmapGenerator::sensor_frame_to_robot_frame(const std::string& robot_frame_id, const std::string& sensor_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame)
+void LocalCostmapGenerator::sensor_frame_to_robot_frame(const std::string& sensor_frame_id, const std::string& robot_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame)
 {
     try {
         transform_stamped_ = tf_buffer_.lookupTransform(robot_frame_id, sensor_frame_id, rclcpp::Time(0));

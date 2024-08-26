@@ -16,7 +16,8 @@
 #include "tf2_ros/buffer.h"
 #include "tf2_ros/transform_listener.h"
 #include "tf2_eigen/tf2_eigen.h"
-#include "pcl/transform.h"
+// #include "pcl/transform.h"
+#include <pcl/common/transforms.h>
 
 class LocalCostmapGenerator : public rclcpp::Node {
 
@@ -63,9 +64,9 @@ private:
 
     void pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2);
 
-    void preprocess_pointcloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed);
+    void preprocess_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_preprocessed);
 
-    void sensor_frame_to_robot_frame(const std::string& robot_frame_id, const std::string& sensor_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame);
+    void sensor_frame_to_robot_frame(const std::string& sensor_frame_id, const std::string& robot_frame_id, const pcl::PointCloud<pcl::PointXYZ>::ConstPtr& pcl_sensor_frame, pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_robot_frame);
 
     void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
 
