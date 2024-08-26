@@ -14,7 +14,6 @@ PCL
 ```bash
 sudo apt update
 sudo apt install libpcl-dev
-
 sudo apt-get install ros-foxy-pcl-conversions
 sudo apt install ros-foxy-pcl-ros
 ```
@@ -32,6 +31,21 @@ sudo apt-get update
 sudo apt-get install ros-foxy-tf2-ros
 sudo apt-get install ros-foxy-tf2-eigen
 ```
+
+grid_map
+
+```bash
+sudo apt-get install ros-foxy-grid-map
+```
+
+OpenMP
+
+```bash
+gcc --version
+sudo apt update
+sudo apt install build-essential
+```
+
 
 # Functions
 

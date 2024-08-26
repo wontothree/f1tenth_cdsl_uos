@@ -29,10 +29,10 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 
     // remove_pcl_within_robot
     pcl::CropBox<pcl::PointXYZ> crop_box_filter_;
-    double rigid_body_shape_baselink2front = 0.3;
-    double rigid_body_shape_baselink2rear = 0.2;
-    double rigid_body_shape_baselink2right = 0.2;
-    double rigid_body_shape_baselink2left = 0.2;
+    double rigid_body_shape_baselink2front = 0.47; // m
+    double rigid_body_shape_baselink2rear = 0.14;
+    double rigid_body_shape_baselink2right = 0.15;
+    double rigid_body_shape_baselink2left = 0.15;
     double min_high = 0.0;
     double max_high = 10.0;
     double min_x = -rigid_body_shape_baselink2rear;
@@ -41,6 +41,10 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     double max_y = rigid_body_shape_baselink2left;
     crop_box_min_ = Eigen::Vector4f(min_x, min_y, min_high, 1.0);
     crop_box_max_ = Eigen::Vector4f(max_x, max_y, max_high, 1.0);
+
+    // pcl_to_costmap
+    thread_num_ = 4;
+    cell_occupancy_value = 100;
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)
@@ -122,6 +126,42 @@ void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXY
     crop_box_filter_.filter(*pcl);
 
     print_pcl_robot_frame();
+}
+
+std::vector<grid_map::Index> LocalCostmapGenerator::pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const
+{
+    grid_map::Matrix& costmap_ = costmap->get("collision_layer");
+
+    costmap_.setZero();
+
+    std::vector<grid_map::Index> occupied_indices(pcl->points.size());
+
+    #pragma omp parallel for num_threads(thread_num_)
+    for (unsigned int i = 0; i < pcl->points.size(); ++i) {
+        const auto& point = pcl->points[i];
+
+        if (costmap->isInside(grid_map::Position(point.x, point.y))) {
+            grid_map::Index index;
+            costmap->getIndex(grid_map::Position(point.x, point.y), index);
+            costmap_(index.x(), index.y()) = cell_occupancy_value;
+            occupied_indices[i] = index;
+        } else {
+            occupied_indices[i] = grid_map::Index(-1, -1);
+        }
+    }
+
+    occupied_indices.erase(
+        std::remove_if(
+            occupied_indices.begin(), occupied_indices.end(),
+            [](const grid_map::Index& index) {
+                return index.x() == -1 && index.y() == -1;
+            }
+        ),
+        occupied_indices.end()
+    );
+
+
+    return occupied_indices;
 }
 
 // functions for test
