@@ -106,10 +106,6 @@ private:
     // 6
     // void pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const;
 
-    void print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2_msg);
-
-    void print_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl);
-
     void print_pcl_robot_frame();
 };
 

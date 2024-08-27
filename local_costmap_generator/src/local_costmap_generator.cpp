@@ -51,6 +51,14 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     offset_x_costmap = 3.0;
     offset_x_costmap = 0.0;
     resolution_costmap = 0.1;   
+
+
+    // visualize
+    // PCLVisualizer 초기화
+    viewer_ = std::make_shared<pcl::visualization::PCLVisualizer>("3D Viewer");
+    viewer_->setBackgroundColor(0, 0, 0);  // 검정 배경
+    viewer_->initCameraParameters();
+    viewer_->addCoordinateSystem(1.0);     // 좌표 축 추가
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)
@@ -171,26 +179,6 @@ void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXY
 // }
 
 // functions for test
-void LocalCostmapGenerator::print_pointcloud2(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2)
-{
-    // 메시지 내용을 간단히 출력
-    std::ostringstream oss;
-    oss << "PointCloud2: " << std::endl;
-    oss << "  Width: " << pointcloud2->width << std::endl;
-    oss << "  Height: " << pointcloud2->height << std::endl;
-    oss << "  Points: " << pointcloud2->width * pointcloud2->height << std::endl;
-    RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
-}
-
-void LocalCostmapGenerator::print_pcl(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl)
-{
-    std::ostringstream oss;
-    oss << "PCL PointCloud: " << std::endl;
-    for (const auto& point : pcl->points) {
-        oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
-    }
-    RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
-}
 
 void LocalCostmapGenerator::print_pcl_robot_frame()
 {
@@ -199,10 +187,25 @@ void LocalCostmapGenerator::print_pcl_robot_frame()
         return;
     }
 
-    std::ostringstream oss;
-    oss << "pcl_robot_frame_ PointCloud: " << std::endl;
-    for (const auto& point : pcl_robot_frame_->points) {
-        oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
-    }
-    RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
+    // std::ostringstream oss;
+    // oss << "pcl_robot_frame_ PointCloud: " << std::endl;
+    // for (const auto& point : pcl_robot_frame_->points) {
+    //     oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
+    // }
+    // RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
+
+    // 기존에 사용하던 viewer 초기화
+    viewer_->removeAllPointClouds();
+
+    // 포인트 클라우드 추가
+    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> color_handler(pcl_robot_frame_, 255, 255, 255); // 흰색 점
+    viewer_->addPointCloud<pcl::PointXYZ>(pcl_robot_frame_, color_handler, "robot_frame_cloud");
+
+    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "robot_frame_cloud");
+
+    // 추가로 축 표시 (optional)
+    viewer_->addCoordinateSystem(1.0);
+
+    // 화면 업데이트
+    viewer_->spinOnce();
 }
