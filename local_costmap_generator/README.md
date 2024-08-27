@@ -32,12 +32,6 @@ sudo apt-get install ros-foxy-tf2-ros
 sudo apt-get install ros-foxy-tf2-eigen
 ```
 
-grid_map
-
-```bash
-sudo apt-get install ros-foxy-grid-map
-```
-
 OpenMP
 
 ```bash
@@ -45,7 +39,6 @@ gcc --version
 sudo apt update
 sudo apt install build-essential
 ```
-
 
 # Functions
 
@@ -78,6 +71,12 @@ sudo apt install build-essential
 |pcl::PointCloud<pcl::PointXYZ >::Ptr|pcl_preprocessed_|전처리된 pcl 데이터를 저장한다.|
 |std::string|robot_frame_id_||
 |std::string|sensor_frame_id_||
+|||
+|double|length_x_costmap||
+|double|length_y_costmap||
+|double|offset_x_costmap_center||
+|double|offset_y_costmap_center||
+|double|resolution_costmap||
 
 # Convention
 

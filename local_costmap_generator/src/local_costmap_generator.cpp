@@ -29,22 +29,28 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
 
     // remove_pcl_within_robot
     pcl::CropBox<pcl::PointXYZ> crop_box_filter_;
-    double rigid_body_shape_baselink2front = 0.47; // m
-    double rigid_body_shape_baselink2rear = 0.14;
-    double rigid_body_shape_baselink2right = 0.15;
-    double rigid_body_shape_baselink2left = 0.15;
-    double min_high = 0.0;
-    double max_high = 10.0;
-    double min_x = -rigid_body_shape_baselink2rear;
-    double max_x = rigid_body_shape_baselink2front;
-    double min_y = -rigid_body_shape_baselink2right;
-    double max_y = rigid_body_shape_baselink2left;
+    rigid_body_shape_baselink2front = 0.47; // m
+    rigid_body_shape_baselink2rear = 0.14;
+    rigid_body_shape_baselink2right = 0.15;
+    rigid_body_shape_baselink2left = 0.15;
+    min_high = 0.0;
+    max_high = 10.0;
+    min_x = -rigid_body_shape_baselink2rear;
+    max_x = rigid_body_shape_baselink2front;
+    min_y = -rigid_body_shape_baselink2right;
+    max_y = rigid_body_shape_baselink2left;
     crop_box_min_ = Eigen::Vector4f(min_x, min_y, min_high, 1.0);
     crop_box_max_ = Eigen::Vector4f(max_x, max_y, max_high, 1.0);
 
     // pcl_to_costmap
     thread_num_ = 4;
     cell_occupancy_value = 100;
+    // costmap
+    length_x_costmap = 10.0; // m
+    length_y_costmap = 10.0;
+    offset_x_costmap = 3.0;
+    offset_x_costmap = 0.0;
+    resolution_costmap = 0.1;   
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)

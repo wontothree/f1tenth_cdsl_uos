@@ -76,6 +76,12 @@ private:
     // pcl_to_costmap
     int thread_num_;
     double cell_occupancy_value;
+    // costmap
+    double length_x_costmap;
+    double length_y_costmap;
+    double offset_x_costmap_center;
+    double offset_y_costmap_center;
+    double resolution_costmap;
 
     // functions
     void scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan);
