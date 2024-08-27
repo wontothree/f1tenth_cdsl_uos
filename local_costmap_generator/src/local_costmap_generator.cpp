@@ -2,32 +2,33 @@
 
 LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_node"), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
 {
-    laserscan_topic = "/scan";
+    // subscribe
+    topic_name_laserscan = "/scan";
+    sub_laserscan_ = this->create_subscription<sensor_msgs::msg::LaserScan>(topic_name_laserscan, 10, std::bind(&LocalCostmapGenerator::scan_callback, this, std::placeholders::_1));
 
-    sub_laserscan_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
-        laserscan_topic,
-        10, 
-        std::bind(&LocalCostmapGenerator::scan_callback, this, std::placeholders::_1)
-    );
-
+    // publish
+    topic_name_pointcloud2 = "/pointcloud2";
+    pub_pointcloud2_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(topic_name_pointcloud2, 10);
+    
+    // scan_callback
     is_laserscan_received_ = false;
 
+    // timer_callback
     timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalCostmapGenerator::timer_callback, this));
 
+    // 1. laserscan_to_pointcloud2
     laser_projection_ = std::make_shared<laser_geometry::LaserProjection>();
-
     pointcloud2_ = std::make_shared<sensor_msgs::msg::PointCloud2>();
 
-    pub_pointcloud2_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/pointcloud2", 10);
-
+    // 2. pointcloud2_to_pcl
     pcl_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 
-    // senor_frame_to_robot_frame
+    // 4. senor_frame_to_robot_frame
     robot_frame_id_ = "ego_racecar/base_link";
     sensor_frame_id_ = "ego_racecar/laser";
     pcl_robot_frame_ = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 
-    // remove_pcl_within_robot
+    // 5. remove_pcl_within_robot
     pcl::CropBox<pcl::PointXYZ> crop_box_filter_;
     rigid_body_shape_baselink2front = 0.47; // m
     rigid_body_shape_baselink2rear = 0.14;
@@ -42,23 +43,16 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_no
     crop_box_min_ = Eigen::Vector4f(min_x, min_y, min_high, 1.0);
     crop_box_max_ = Eigen::Vector4f(max_x, max_y, max_high, 1.0);
 
-    // pcl_to_costmap
+    // 6. pcl_to_costmap
     thread_num_ = 4;
     cell_occupancy_value = 100;
     // costmap
     length_x_costmap = 10.0; // m
     length_y_costmap = 10.0;
-    offset_x_costmap = 3.0;
-    offset_x_costmap = 0.0;
+    offset_x_costmap_center = 3.0;
+    offset_x_costmap_center = 0.0;
     resolution_costmap = 0.1;   
 
-
-    // visualize
-    // PCLVisualizer 초기화
-    viewer_ = std::make_shared<pcl::visualization::PCLVisualizer>("3D Viewer");
-    viewer_->setBackgroundColor(0, 0, 0);  // 검정 배경
-    viewer_->initCameraParameters();
-    viewer_->addCoordinateSystem(1.0);     // 좌표 축 추가
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)
@@ -91,23 +85,22 @@ void LocalCostmapGenerator::timer_callback()
     // 6. pcl 2 costmap
 
     // 7. inflate rigid body
+
+    // pcl::PointCloud 2 sensor_msgs::PointCloud2
+    pcl_to_pointcloud2(pcl_robot_frame_, pointcloud2_);
+
+    // publish
+    pub_pointcloud2_->publish(*pointcloud2_);
 }
 
 void LocalCostmapGenerator::laserscan_to_pointcloud2(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan, sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
 {
     laser_projection_->projectLaser(*laserscan, *pointcloud2);
-    // print_pointcloud2(pointcloud2_);
-
-    // publish
-    // pub_pointcloud2_->publish(*pointcloud2_);
 }
 
 void LocalCostmapGenerator::pointcloud2_to_pcl(const sensor_msgs::msg::PointCloud2::ConstSharedPtr pointcloud2, pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
 {
     pcl::fromROSMsg(*pointcloud2, *pcl);
-
-    // test
-    // print_pcl(pcl_);
 }
 
 void LocalCostmapGenerator::preprocess_pcl(pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
@@ -127,8 +120,6 @@ void LocalCostmapGenerator::sensor_frame_to_robot_frame(const std::string& senso
     const Eigen::Isometry3d transform_matrix = tf2::transformToEigen(transform_stamped_.transform);
 
     pcl::transformPointCloud(*pcl_sensor_frame, *pcl_robot_frame, transform_matrix.matrix().cast<float>());
-
-    // print_pcl_robot_frame();
 }
 
 void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXYZ>::Ptr pcl)
@@ -138,8 +129,6 @@ void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXY
     crop_box_filter_.setMin(crop_box_min_);
     crop_box_filter_.setMax(crop_box_max_);
     crop_box_filter_.filter(*pcl);
-
-    print_pcl_robot_frame();
 }
 
 // std::vector<grid_map::Index> LocalCostmapGenerator::pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const
@@ -178,34 +167,7 @@ void LocalCostmapGenerator::remove_pcl_within_robot(pcl::PointCloud<pcl::PointXY
 //     return occupied_indices;
 // }
 
-// functions for test
-
-void LocalCostmapGenerator::print_pcl_robot_frame()
+void LocalCostmapGenerator::pcl_to_pointcloud2(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2)
 {
-    if (pcl_robot_frame_->empty()) {
-        RCLCPP_INFO(this->get_logger(), "pcl_robot_frame_ is empty.");
-        return;
-    }
-
-    // std::ostringstream oss;
-    // oss << "pcl_robot_frame_ PointCloud: " << std::endl;
-    // for (const auto& point : pcl_robot_frame_->points) {
-    //     oss << "  x: " << point.x << " y: " << point.y << " z: " << point.z << std::endl;
-    // }
-    // RCLCPP_INFO(this->get_logger(), "%s", oss.str().c_str());
-
-    // 기존에 사용하던 viewer 초기화
-    viewer_->removeAllPointClouds();
-
-    // 포인트 클라우드 추가
-    pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> color_handler(pcl_robot_frame_, 255, 255, 255); // 흰색 점
-    viewer_->addPointCloud<pcl::PointXYZ>(pcl_robot_frame_, color_handler, "robot_frame_cloud");
-
-    viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "robot_frame_cloud");
-
-    // 추가로 축 표시 (optional)
-    viewer_->addCoordinateSystem(1.0);
-
-    // 화면 업데이트
-    viewer_->spinOnce();
+    pcl::toROSMsg(*pcl, *pointcloud2);
 }

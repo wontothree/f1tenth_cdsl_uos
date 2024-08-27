@@ -32,25 +32,28 @@ public:
 private:
     // variables
 
-    // Topic
-    std::string laserscan_topic;
-
-    // subscribers
+    // subscribe
+    std::string topic_name_laserscan;
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr sub_laserscan_;
 
-    bool is_laserscan_received_;
-
-    rclcpp::TimerBase::SharedPtr timer_;
-
-    std::shared_ptr<laser_geometry::LaserProjection> laser_projection_;
-
-    std::shared_ptr<sensor_msgs::msg::PointCloud2> pointcloud2_;
-
+    // publish
+    std::string topic_name_pointcloud2;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_pointcloud2_;
 
+    // scan_callback
+    bool is_laserscan_received_;
+
+    // timer_callback
+    rclcpp::TimerBase::SharedPtr timer_;
+
+    // 1. laserscan_to_pointcloud2
+    std::shared_ptr<laser_geometry::LaserProjection> laser_projection_;
+    std::shared_ptr<sensor_msgs::msg::PointCloud2> pointcloud2_;
+
+    // 2. pointcloud2_to_pcl 
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_;
 
-    // senor_frame_to_robot_frame
+    // 4. senor_frame_to_robot_frame
     std::string robot_frame_id_;
     std::string sensor_frame_id_;
     pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_robot_frame_;
@@ -58,7 +61,7 @@ private:
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
 
-    // remove_pcl_within_robot
+    // 5. remove_pcl_within_robot
     pcl::CropBox<pcl::PointXYZ> crop_box_filter_;
     double rigid_body_shape_baselink2front;
     double rigid_body_shape_baselink2rear;
@@ -73,7 +76,7 @@ private:
     Eigen::Vector4f crop_box_min_;
     Eigen::Vector4f crop_box_max_;
 
-    // pcl_to_costmap
+    // 6. pcl_to_costmap
     int thread_num_;
     double cell_occupancy_value;
     // costmap
@@ -106,7 +109,7 @@ private:
     // 6
     // void pcl_to_costmap(const pcl::PointCloud<PointXYZ>::ConstPtr pcl, grid_map::GridMap* costmap) const;
 
-    void print_pcl_robot_frame();
+    void pcl_to_pointcloud2(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr pcl, sensor_msgs::msg::PointCloud2::SharedPtr pointcloud2);
 };
 
 #endif // LOCAL_COSTMAP_GENERATOR_HPP
