@@ -1,12 +1,17 @@
 # F1tenth CDSL_UOS Packages
 
-    ├── local_costmap_generator                 # Local planner
-    ├──                                         # 
+    ├── local_costmap_generator                 # local grid map using LiDAR
+    ├── global_costmap_generator                # global grid map through SLAM
+    ├── pose_estimator                          # localization
+    ├── local_planner                           # local planner (map-free / map-based)
+    ├── global_planner                          # global planner
+
+# Tested Environment
+
+- Ubuntu 20.04 (LTS)
+- ROS2 Foxy
 
 # Dependencies
-
-- ROS2 Foxy
-- Ubuntu 20.04
 
 ```bash
 rosdep install --from-paths src --ignore-src -r -y
