@@ -1,6 +1,6 @@
 #include "local_costmap_generator.hpp"
 
-LocalCostmapGenerator::LocalCostmapGenerator() : Node("loca_costmap_generator_node"), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
+LocalCostmapGenerator::LocalCostmapGenerator() : Node("local_costmap_generator_node"), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
 {
     // subscribe
     topic_name_laserscan = "/scan";
