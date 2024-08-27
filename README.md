@@ -1,6 +1,6 @@
 # F1tenth CDSL_UOS Packages
 
-    ├── local_costmap_generator                 # local grid map using LiDAR
+    ├── local_costmap_generator                 # local grid map through LiDAR
     ├── global_costmap_generator                # global grid map through SLAM
     ├── pose_estimator                          # localization
     ├── local_planner                           # local planner (map-free / map-based)
