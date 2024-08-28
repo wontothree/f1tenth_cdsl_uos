@@ -20,6 +20,8 @@ include_directories(include/)
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp)
+find_package(grid_map_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 
 add_executable(local_planner_node 
   src/local_planner_node.cpp
@@ -27,6 +29,8 @@ add_executable(local_planner_node
 )
 ament_target_dependencies(local_planner_node
   rclcpp
+  grid_map_msgs
+  nav_msgs
 )
 
 target_include_directories(local_planner_node PUBLIC
