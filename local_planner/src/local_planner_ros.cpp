@@ -28,17 +28,28 @@ LocalPlanner::LocalPlanner() : Node("local_planner_node")
     // callback_odometry
     is_odometry_received_ = false;
 
+    robot_state_.x = 0.0;
+    robot_state_.y = 0.0;
+    robot_state_.yaw = 0.0;
+    robot_state_.vel = 0.0;
+    robot_state_.steer = 0.0;
+
     // callback_timer
     timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalPlanner::callback_timer, this));
 }
 
-void LocalPlanner::callback_local_costmap(const grid_map_msgs::msg::GridMap::SharedPtr local_costmap)
+void LocalPlanner::callback_local_costmap([[maybe_unused]] const grid_map_msgs::msg::GridMap::SharedPtr local_costmap)
 {
     is_local_costmap_received_ = true;
 }
 
 void LocalPlanner::callback_odometry(const nav_msgs::msg::Odometry::SharedPtr odometry)
 {
+    robot_state_.x = 0.0;
+    robot_state_.y = 0.0;
+    robot_state_.yaw = 0.0;
+    robot_state_.vel = odometry->twist.twist.linear.x;
+
     is_odometry_received_ = true;
 }
 

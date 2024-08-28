@@ -26,6 +26,16 @@ private:
     // callback_odometry
     bool is_odometry_received_;
 
+    struct RobotState {
+        double x;
+        double y;
+        double yaw;
+        double vel;
+        double steer;
+    };
+
+    RobotState robot_state_;
+
     // callback_timer
     rclcpp::TimerBase::SharedPtr timer_;
 
