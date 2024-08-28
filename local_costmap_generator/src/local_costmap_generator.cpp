@@ -52,7 +52,6 @@ LocalCostmapGenerator::LocalCostmapGenerator() : Node("local_costmap_generator_n
     offset_x_costmap_center = 3.0;
     offset_x_costmap_center = 0.0;
     resolution_costmap = 0.1;   
-
 }
 
 void LocalCostmapGenerator::scan_callback(const sensor_msgs::msg::LaserScan::ConstSharedPtr laserscan)
