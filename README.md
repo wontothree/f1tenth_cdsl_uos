@@ -1,5 +1,11 @@
 # F1tenth CDSL_UOS Packages
 
+This project is for a autonomous racing competition f1tenth.
+
+22ND F1TENTH AUTONOMOUS GRAND Prix at CDC 2024
+
+1:10 scaled autonomous race car
+
     ├── local_costmap_generator                 # local grid map through LiDAR
     ├── global_costmap_generator                # global grid map through SLAM
     ├── pose_estimator                          # localization
@@ -14,25 +20,27 @@
 
 # Dependencies
 
+Install dependencies
+
 ```bash
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
 # Simulation
 
-- f1tenth_gym_ros의 docker-compose.yml 파일이 있는 경로에서 다음 명령어를 통해 sim-1와 novnc-1을 실행한다.
+Run 'sim-1' and 'novnc-1' in directory 'f1tenth_gym_ros' having 'docker-compose.yml'
 
 ```bash
 docker-compose up
 ```
 
-- 다른 terminal에서 다음 명령어를 통해 sim-1 docker image에 접속한다.
+Contact docker image 'sim-1' in another terminal
 
 ```bash
 docker exec -it f1tenth_gym_ros-sim-1 /bin/bash
 ```
 
-- sim-1 image의 sim_ws 경로에서 다음 명령어들을 통해 launch file을 실행한다.
+Run launch file in path 'sim-1' of sim_ws
 
 ```bash
 source /opt/ros/foxy/setup.bash
@@ -40,19 +48,19 @@ source install/local_setup.bash
 ros2 launch f1tenth_gym_ros gym_bridge_launch.py
 ```
 
-- [http://localhost:8080/vnc.html](http://localhost:8080/vnc.html)에서 RVIZ 환경을 이용한다.
+You can see RVIZ in [http://localhost:8080/vnc.html](http://localhost:8080/vnc.html)
 
-- Vscode를 통해 sim-1 image에 접속하여 코드를 편집한다.
+You can edit source codes in 'sim-1' image by using vscode
 
-- 다음 명령어들을 통해 colcon build를 하여 수정사항을 반영한다.
+Apply the edited codes
 
 ```bash
 colcon build
-// or
+
 colcon build --packages-select <package_name>
 ```
 
-- node를 실행한다.
+Run the node
 
 ```bash
 ros2 run <package_name> <node_name>
