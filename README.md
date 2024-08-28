@@ -5,6 +5,7 @@
     ├── pose_estimator                          # localization
     ├── local_planner                           # local planner (map-free / map-based)
     ├── global_planner                          # global planner
+    ├── grid_map                                # dependencies
 
 # Tested Environment
 
@@ -61,16 +62,6 @@ ros2 run <package_name> <node_name>
 
 [svg-mppi ros1](https://github.com/kohonda/proj-svg_mppi?tab=readme-ov-file) \
 https://github.com/bosky2001/f1tenth_mppi
-
-[F1tenth Official Website](https://f1tenth.org/build.html) \
-[https://stevengong.co/notes/F1TENTH-Field-Usage](https://stevengong.co/notes/F1TENTH-Field-Usage)
-[f1tenth_system github](https://github.com/f1tenth/f1tenth_system?tab=readme-ov-file) \
-[F1TENTH Autonomous Racing Community GITHUB Organization](https://github.com/f1tenth)
-
-Slam
-
-[Cartographer GITHUB](https://github.com/cartographer-project/cartographer?tab=readme-ov-file) \
-https://github.com/changh95/fastcampus_slam_codes
 
 ROS2 Workspace
 
