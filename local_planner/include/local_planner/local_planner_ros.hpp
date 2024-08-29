@@ -38,6 +38,7 @@ private:
 
     // callback_timer
     rclcpp::TimerBase::SharedPtr timer_;
+    std::string mpc_mode_;
 
     // functions
     void callback_local_costmap(const grid_map_msgs::msg::GridMap::SharedPtr local_costmap);

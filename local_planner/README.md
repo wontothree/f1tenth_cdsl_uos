@@ -19,4 +19,7 @@
 |rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr|sub_odometry_|lodometry에 대한 topic subscriber 객체 smart pointer||nav_msgs/msg/odometry.hpp|
 |bool|is_local_costmap_received_||false||
 |bool|is_odometry_received_||false||
+||||||
 |rclcpp::TimerBase::SharedPtr|timer_|타이머 참조 변수||rclcpp|
+|std::string|mpc_mode_|||string|
+||mpc_solver_|||

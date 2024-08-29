@@ -36,10 +36,24 @@ LocalPlanner::LocalPlanner() : Node("local_planner_node")
 
     // callback_timer
     timer_ = this->create_wall_timer(std::chrono::milliseconds(1000), std::bind(&LocalPlanner::callback_timer, this));
+    mpc_mode = "svg_mppi";
+    if (mpc_mode_ == "forward_mppi") {
+        // mpc_solver_
+    } else if (mpc_mode_ == "backward_mppi") {
+        // mpc_solver_
+    } else if (mpc_mode_ == "sv_mpc") {
+        // mpc_solver_
+    } else if (mpc_mode_ == "svg_mppi") {
+        // mpc_solver_
+    } else {
+        // error message
+        // exit(1)
+    }
 }
 
 void LocalPlanner::callback_local_costmap([[maybe_unused]] const grid_map_msgs::msg::GridMap::SharedPtr local_costmap)
 {
+    // grid_map_msgs::msg::GridMap 2 
     is_local_costmap_received_ = true;
 }
 
@@ -55,5 +69,20 @@ void LocalPlanner::callback_odometry(const nav_msgs::msg::Odometry::SharedPtr od
 
 void LocalPlanner::callback_timer()
 {
-    // ...
+    // status check
+    if (is_localize_less_mode_) {
+        if (!is_local_costmap_received_ || !is_odometry_received_) {
+            // warning message
+            return;
+        }
+    } else {
+        // ...
+    }
+
+    //
+    mpc_solver_->set_local_costmap(local_costmap_);
+    if (!is_localize_less_mode_) {
+        // ...
+    }
+    
 }
