@@ -2,10 +2,15 @@
 #define LOCAL_PLANNER_HPP
 
 #include <string>
+#include <Eigen/Dense>
 
 #include "rclcpp/rclcpp.hpp"
 #include "grid_map_msgs/msg/grid_map.hpp"
-#include "nav_msgs/msg/odometry.hpp"       
+#include "nav_msgs/msg/odometry.hpp"
+#include "ackermann_msgs/msg/ackermann_drive_stamped.hpp"
+
+
+#include "mpc_types.hpp"
 
 class LocalPlanner : public rclcpp::Node {
 public:
@@ -39,6 +44,11 @@ private:
     // callback_timer
     rclcpp::TimerBase::SharedPtr timer_;
     std::string mpc_mode_;
+    // mpc_solver_ = std::make_unique<SVGuidedMPPI>(params.common, params.svg_mppi);
+    // std::unique_ptr<MPCTemplate> mpc_solver_; ------- class 만들러
+    ackermann_msgs::msg::AckermannDriveStamped ackermann_msg_;
+    double control_sampling_time_;
+    double steer_1st_delay_;
 
     // functions
     void callback_local_costmap(const grid_map_msgs::msg::GridMap::SharedPtr local_costmap);
