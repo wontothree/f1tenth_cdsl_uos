@@ -20,13 +20,13 @@ public:
 
     virtual ControlSeq get_control_seq() const = 0;
 
-    virtual std::pair<std::vector<StateSeq>, std::vector<double>> get_state_seq_candidates(const int& num_samples) const = 0;
+    virtual std::pair<std::vector<StateSeq>, std::vector<double>> get_state_seq(const int& num_samples) const = 0;
 
-    virtual std::tuple<StateSeq, double, double, double> get_predictive_seq(const State& initial_state, const ControlSeq& control_input_seq) const = 0;
+    // virtual std::tuple<StateSeq, double, double, double> get_predictive_seq(const State& initial_state, const ControlSeq& control_input_seq) const = 0;
 
-    virtual ControlSeqCovMatrices get_cov_matrices() const = 0;
+    // virtual ControlSeqCovMatrices get_cov_matrices() const = 0;
 
-    virtual std::pair<StateSeq, XYCovMatrices> get_proposed_state_distribution() const = 0;
+    // virtual std::pair<StateSeq, XYCovMatrices> get_proposed_state_distribution() const = 0;
 
     // std::vector<double> softmax(const std::vector<double>& costs, const double& lambda, const in thread_num) const
     // {

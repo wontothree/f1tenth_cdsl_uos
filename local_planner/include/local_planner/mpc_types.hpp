@@ -21,6 +21,9 @@ namespace CONTROL_SPACE {
 namespace mpc_types {
     using State = Eigen::Matrix<double, STATE_SPACE::dim, 1>;
     using Control = Eigen::Matrix<double, CONTROL_SPACE::dim, 1>;
+    
+    using StateSeq = Eigen::MatrixXd;
+    using ControlSeq = Eigen::MatrixXd;
 } // mpc_types
 
 } // mpc
