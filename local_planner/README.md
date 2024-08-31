@@ -48,6 +48,28 @@ sudo apt-get install libeigen3-dev
 |std::pair<StateSeq, XYCovMatrices>|get_proposed_state_distribution|void|제안된 상태 분포를 반환한다.||
 |std::vector<double>|softmax||||
 
+- mpc_base.hpp
+
+|Return|Function Name|Input|Description|Dependencies function|
+|---|---|---|---|---|
+||set_local_costmap|const grid_map::GridMap& local_costmap|||
+||set_global_costmap|const grid_map::GridMap& global_costmap|||
+||calc_sample_costs||||
+||get_predictive_seq||||
+||get_state_seq_candidates||||
+||get_proposed_distribution||||
+||calc_sample_costs||||
+||calc_sample_costs||||
+||predict_state_seq||||
+||predict_state_seq||||
+||constant_speed_prediction||||
+||linear_speed_prediction||||
+||linear_speed_prediction||||
+||reference_speed_prediction||||
+||state_cost||||
+||state_cost||||
+||calc_state_distribution||||
+
 # Variables
 
 |Type|Variable Name|Description|Initialization|Dependencies|
