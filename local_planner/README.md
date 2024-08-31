@@ -1,10 +1,25 @@
 # local_planner
 
+    local_planner
+    ├── include/                                    # hpp files
+    |     └── local_planner                           
+    |         ├── local_planner_ros,hpp             # ros program
+    |         ├── mpc_types.hpp                     # data types definition for mpc
+    |         ├── mpc_template.hpp                  # abstract class (interface) for MPC implementation
+    |         └── mpc_base.hpp                      # essential building blocks for implementing MPC
+    <!-- |         └── mpc_solver_svg_mppi.hpp           # svg mppi solver -->
+    ├── src/                                        # cpp files
+    |     ├── local_planner_node.cpp                # running local_planner_node
+    |     ├── local_planner_ros.cpp
+    |     ├── mpc_base.cpp                 
+    <!-- |     └── mpc_solver_svg_mppi.cpp                 -->
+    ├── CMakeLists.txt                       
+    ├── package.xml                           
+
 # Dependencies
 
 ```bash
 sudo apt-get install libeigen3-dev
-
 ```
 
 # Functions
