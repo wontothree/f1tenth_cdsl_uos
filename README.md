@@ -1,4 +1,4 @@
-# F1tenth CDSL_UOS Packages
+# F1tenth Seoul
 
 This project is for 22ND F1TENTH AUTONOMOUS GRAND Prix at CDC 2024.
 
