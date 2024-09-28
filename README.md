@@ -1,8 +1,6 @@
 # F1tenth CDSL_UOS Packages
 
-This project is for a autonomous racing competition f1tenth.
-
-22ND F1TENTH AUTONOMOUS GRAND Prix at CDC 2024
+This project is for 22ND F1TENTH AUTONOMOUS GRAND Prix at CDC 2024.
 
 1:10 scaled autonomous race car
 
@@ -26,7 +24,7 @@ Install dependencies
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-# Simulation
+# Getting Started
 
 Run 'sim-1' and 'novnc-1' in directory 'f1tenth_gym_ros' having 'docker-compose.yml'
 
