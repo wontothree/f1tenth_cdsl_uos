@@ -1,4 +1,4 @@
-# F1tenth Seoul
+# F1tenth Turtle_Ship Packages
 
 This project is for 22ND F1TENTH AUTONOMOUS GRAND Prix at CDC 2024.
 
